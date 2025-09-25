@@ -63,10 +63,10 @@ class _HomeScreenState extends State<HomeScreen> {
     for (var log in logs) {
       final food = foodMap[log.foodId];
       if (food != null) {
-        protein += food.protein * log.servings;
-        carbs += food.carbs * log.servings;
-        fat += food.fat * log.servings;
-        calories += food.calories * log.servings;
+        protein += food.protein * log.servings / food.servingSize;
+        carbs += food.carbs * log.servings / food.servingSize;
+        fat += food.fat * log.servings / food.servingSize;
+        calories += food.calories * log.servings / food.servingSize;
       }
     }
 
@@ -227,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: _openSetGoals,
           ),
           IconButton(
-            icon: Icon(Icons.fastfood),
+            icon: Icon(Icons.post_add),
             tooltip: "Add Food",
             onPressed: _openAddFood,
           ),
@@ -292,10 +292,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: SingleChildScrollView(
                         child: Column(
                           children: _todayLogs.map((log) {
-                            final food = _foodsById[log.foodId];
+                            final food = _foodsById[log.foodId]!;
                             return ListTile(
                               title: Text(
-                                "${food?.name ?? 'Unknown Food'}: ${log.servings}${food?.servingUnits ?? 'units'}",
+                                "${food.name}: ${log.servings} ${food.servingUnits}",
+                              ),
+                              subtitle: Text(
+                                "Brand: ${food.brand}\nProtein: ${food.protein * log.servings / food.servingSize}g, Carbs: ${food.carbs * log.servings / food.servingSize}g, Fat: ${food.fat * log.servings / food.servingSize}g, Calories: ${food.calories * log.servings / food.servingSize} kcal",
                               ),
                               leading: IconButton(
                                 icon: Icon(Icons.delete, color: Colors.red),

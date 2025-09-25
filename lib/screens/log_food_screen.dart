@@ -10,79 +10,57 @@ class LogFoodScreen extends StatefulWidget {
 
 class _LogFoodScreenState extends State<LogFoodScreen> {
   final _db = DatabaseService();
-  int? _selectedFoodId;
-  Food? get _selectedFood =>
-      _foodsById[_selectedFoodId]; // optional convenience getter
+  List<Food> _allFoods = [];
   Map<int, Food> _foodsById = {};
+  int? _selectedFoodId;
+  Food? get _selectedFood => _foodsById[_selectedFoodId];
 
   final _amountController = TextEditingController();
+  double _currentProtein = 0;
+  double _currentCarbs = 0;
+  double _currentFat = 0;
+  double _currentCalories = 0;
+  String _searchQuery = "";
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Log Food")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            FutureBuilder<List<Food>>(
-              future: _db.getAllFoods(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) return CircularProgressIndicator();
-                final foods = snapshot.data!;
-                for (var f in foods) {
-                  _foodsById[f.id] = f;
-                }
+  void initState() {
+    super.initState();
+    _loadFoods();
+    _amountController.addListener(_updateMacros);
+  }
 
-                return DropdownButton<int>(
-                  hint: Text("Select Food"),
-                  value: _selectedFoodId,
-                  isExpanded: true,
-                  items: foods
-                      .map(
-                        (f) => DropdownMenuItem(
-                          value: f.id, // use ID here
-                          child: Text(
-                            "${f.name} (${f.servingSize}${f.servingUnits})",
-                          ),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (id) {
-                    setState(() {
-                      _selectedFoodId = id;
-                      _amountController.text = _selectedFood != null
-                          ? _selectedFood!.servingSize.toString()
-                          : '';
-                    });
-                  },
-                );
-              },
-            ),
-            SizedBox(height: 12),
-            if (_selectedFood != null)
-              TextField(
-                controller: _amountController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: "Amount in ${_selectedFood!.servingUnits}",
-                ),
-              ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _selectedFood == null ? null : _saveLog,
-              child: Text("Log Food"),
-            ),
-          ],
-        ),
-      ),
-    );
+  @override
+  void dispose() {
+    _amountController.dispose();
+    super.dispose();
+  }
+
+  void _loadFoods() async {
+    final foods = await _db.getAllFoods();
+    setState(() {
+      _allFoods = foods;
+      _foodsById = {for (var f in foods) f.id: f};
+    });
+  }
+
+  void _updateMacros() {
+    if (_selectedFood == null) return;
+
+    final amount = double.tryParse(_amountController.text) ?? 0;
+    final servings = amount / (_selectedFood?.servingSize ?? 1);
+
+    setState(() {
+      _currentProtein = (_selectedFood?.protein ?? 0) * servings;
+      _currentCarbs = (_selectedFood?.carbs ?? 0) * servings;
+      _currentFat = (_selectedFood?.fat ?? 0) * servings;
+      _currentCalories = (_selectedFood?.calories ?? 0) * servings;
+    });
   }
 
   void _saveLog() async {
-    final amount = double.tryParse(_amountController.text) ?? 0;
+    if (_selectedFood == null) return;
 
-    // Convert to "servings" based on food's serving size
+    final amount = double.tryParse(_amountController.text) ?? 0;
     final servings = amount / (_selectedFood?.servingSize ?? 1);
 
     final log = LoggedFood(
@@ -98,5 +76,91 @@ class _LogFoodScreenState extends State<LogFoodScreen> {
       context,
     ).showSnackBar(SnackBar(content: Text("Logged ${_selectedFood!.name}")));
     Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final filteredFoods = _allFoods
+        .where(
+          (f) =>
+              f.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+              f.brand.toLowerCase().contains(_searchQuery.toLowerCase()),
+        )
+        .toList();
+
+    return Scaffold(
+      appBar: AppBar(title: Text("Log Food")),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // Search bar
+            TextField(
+              decoration: InputDecoration(
+                labelText: "Search Foods",
+                prefixIcon: Icon(Icons.search),
+              ),
+              onChanged: (value) => setState(() => _searchQuery = value),
+            ),
+            SizedBox(height: 12),
+
+            // Scrollable list of foods
+            Expanded(
+              child: ListView.builder(
+                itemCount: filteredFoods.length,
+                itemBuilder: (context, index) {
+                  final food = filteredFoods[index];
+                  final isSelected = food.id == _selectedFoodId;
+                  return Card(
+                    color: isSelected ? Colors.blue.shade50 : null,
+                    child: ListTile(
+                      title: Text(
+                        food.name,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        "Brand: ${food.brand}\nServing: ${food.servingSize}${food.servingUnits}\nProtein: ${food.protein}g, Carbs: ${food.carbs}g, Fat: ${food.fat}g, Calories: ${food.calories} kcal",
+                      ),
+                      onTap: () {
+                        setState(() {
+                          _selectedFoodId = food.id;
+                          _amountController.text = food.servingSize.toString();
+                          _updateMacros();
+                        });
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            // Amount entry
+            if (_selectedFood != null) ...[
+              SizedBox(height: 12),
+              TextField(
+                controller: _amountController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: "Amount (${_selectedFood!.servingUnits})",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 12),
+              // Macro display for current amount
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Protein: ${_currentProtein.toStringAsFixed(1)} g, Carbs: ${_currentCarbs.toStringAsFixed(1)} g, Fat: ${_currentFat.toStringAsFixed(1)} g, Calories: ${_currentCalories.toStringAsFixed(0)} kcal",
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(onPressed: _saveLog, child: Text("Log Food")),
+            ],
+          ],
+        ),
+      ),
+    );
   }
 }

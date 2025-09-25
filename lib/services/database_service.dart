@@ -1,4 +1,5 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import '../models/food.dart';
 import '../models/logged_food.dart';
@@ -52,14 +53,19 @@ class DatabaseService {
   }
 
   Future<void> _purgeOldLogs(Database db) async {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
+    try {
+      final today = DateTime.now();
+      final startOfToday = DateTime(today.year, today.month, today.day);
 
-    await db.delete(
-      'logs',
-      where: 'date < ?',
-      whereArgs: [today.toIso8601String()],
-    );
+      await db.delete(
+        'logs',
+        where: 'date < ?',
+        whereArgs: [startOfToday.toIso8601String()],
+      );
+    } catch (e) {
+      // Table might not exist yet (fresh DB) — ignore
+      debugPrint("Purge skipped: $e");
+    }
   }
 
   // === Foods ===

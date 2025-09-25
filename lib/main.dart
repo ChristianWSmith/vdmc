@@ -61,13 +61,11 @@ class _HomeScreenState extends State<HomeScreen> {
     double protein = 0, carbs = 0, fat = 0, calories = 0;
 
     for (var log in logs) {
-      final food = foodMap[log.foodId];
-      if (food != null) {
-        protein += food.protein * log.servings / food.servingSize;
-        carbs += food.carbs * log.servings / food.servingSize;
-        fat += food.fat * log.servings / food.servingSize;
-        calories += food.calories * log.servings / food.servingSize;
-      }
+      final food = foodMap[log.foodId]!;
+      protein += food.protein * log.servings / food.servingSize;
+      carbs += food.carbs * log.servings / food.servingSize;
+      fat += food.fat * log.servings / food.servingSize;
+      calories += food.calories * log.servings / food.servingSize;
     }
 
     setState(() {

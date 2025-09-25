@@ -63,6 +63,16 @@ class DatabaseService {
     }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
+  Future<void> deleteFood(int foodId) async {
+    final db = await database;
+
+    // First delete all logs that reference this food
+    await db.delete('logged_foods', where: 'foodId = ?', whereArgs: [foodId]);
+
+    // Then delete the food itself
+    await db.delete('foods', where: 'id = ?', whereArgs: [foodId]);
+  }
+
   Future<List<Food>> getAllFoods() async {
     final db = await database;
     final result = await db.query('foods');

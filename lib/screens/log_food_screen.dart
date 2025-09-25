@@ -78,6 +78,47 @@ class _LogFoodScreenState extends State<LogFoodScreen> {
     Navigator.pop(context);
   }
 
+  Future<void> _deleteFood(Food food) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Delete ${food.name}?"),
+        content: Text(
+          "Are you sure you want to permanently delete this food from your database?",
+        ),
+        actions: [
+          TextButton(
+            child: Text("Cancel"),
+            onPressed: () => Navigator.pop(context, false),
+          ),
+          TextButton(
+            child: Text("Delete", style: TextStyle(color: Colors.red)),
+            onPressed: () => Navigator.pop(context, true),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      await _db.deleteFood(food.id);
+      setState(() {
+        _allFoods.removeWhere((f) => f.id == food.id);
+        _foodsById.remove(food.id);
+        if (_selectedFoodId == food.id) {
+          _selectedFoodId = null;
+          _amountController.clear();
+          _currentProtein = 0;
+          _currentCarbs = 0;
+          _currentFat = 0;
+          _currentCalories = 0;
+        }
+      });
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Deleted ${food.name}")));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final filteredFoods = _allFoods
@@ -128,13 +169,17 @@ class _LogFoodScreenState extends State<LogFoodScreen> {
                           _updateMacros();
                         });
                       },
+                      leading: IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => _deleteFood(food),
+                      ),
                     ),
                   );
                 },
               ),
             ),
 
-            // Amount entry
+            // Amount entry + macros
             if (_selectedFood != null) ...[
               SizedBox(height: 12),
               TextField(
@@ -146,12 +191,14 @@ class _LogFoodScreenState extends State<LogFoodScreen> {
                 ),
               ),
               SizedBox(height: 12),
-              // Macro display for current amount
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Protein: ${_currentProtein.toStringAsFixed(1)} g, Carbs: ${_currentCarbs.toStringAsFixed(1)} g, Fat: ${_currentFat.toStringAsFixed(1)} g, Calories: ${_currentCalories.toStringAsFixed(0)} kcal",
+                    "Protein: ${_currentProtein.toStringAsFixed(1)} g, "
+                    "Carbs: ${_currentCarbs.toStringAsFixed(1)} g, "
+                    "Fat: ${_currentFat.toStringAsFixed(1)} g, "
+                    "Calories: ${_currentCalories.toStringAsFixed(0)} kcal",
                   ),
                 ],
               ),

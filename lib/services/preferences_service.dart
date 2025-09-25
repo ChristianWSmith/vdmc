@@ -25,6 +25,6 @@ class PreferencesService {
         calories: calories,
       );
     }
-    return null; // no goals set yet
+    return MacroGoals(protein: 100, carbs: 225, fat: 600, calories: 2000);
   }
 }

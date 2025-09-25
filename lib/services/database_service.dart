@@ -18,6 +18,9 @@ class DatabaseService {
     return await openDatabase(
       path,
       version: 1,
+      onOpen: (db) async {
+        await _purgeOldLogs(db);
+      },
       onCreate: (db, version) async {
         // Create the foods table
         await db.execute('''
@@ -45,6 +48,17 @@ class DatabaseService {
         )
       ''');
       },
+    );
+  }
+
+  Future<void> _purgeOldLogs(Database db) async {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    await db.delete(
+      'logs',
+      where: 'date < ?',
+      whereArgs: [today.toIso8601String()],
     );
   }
 

@@ -72,6 +72,8 @@ class _LogFoodScreenState extends State<LogFoodScreen> {
 
     await _db.insertLoggedFood(log);
 
+    if (!mounted) return; // <-- Prevents the crash if screen was closed
+
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text("Logged ${_selectedFood!.name}")));
@@ -160,7 +162,7 @@ class _LogFoodScreenState extends State<LogFoodScreen> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
-                        "Brand: ${food.brand}\nServing: ${food.servingSize}${food.servingUnits}\nProtein: ${food.protein}g, Carbs: ${food.carbs}g, Fat: ${food.fat}g, Calories: ${food.calories} kcal",
+                        "Brand: ${food.brand}\nServing: ${food.servingSize} ${food.servingUnits}\nProtein: ${food.protein}g, Carbs: ${food.carbs}g, Fat: ${food.fat}g, Calories: ${food.calories} kcal",
                       ),
                       onTap: () {
                         setState(() {

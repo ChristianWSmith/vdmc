@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:vdmc/constants.dart';
 import '../models/macro_goals.dart';
 import '../services/preferences_service.dart';
 
@@ -41,7 +42,10 @@ class _SetGoalsScreenState extends State<SetGoalsScreen> {
     final fat = double.tryParse(_fatController.text) ?? 0;
 
     // Using the precise Atwater factors
-    final calories = (protein * 4.27) + (carbs * 4.07) + (fat * 9.02);
+    final calories =
+        (protein * MacroCalories.protein) +
+        (carbs * MacroCalories.carbs) +
+        (fat * MacroCalories.fat);
 
     setState(() {
       _calories = calories;

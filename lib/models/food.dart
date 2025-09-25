@@ -20,4 +20,18 @@ class Food {
     required this.servingSize,
     required this.servingUnits,
   });
+
+  factory Food.fromMap(Map<String, dynamic> map) {
+    return Food(
+      id: map['id'],
+      name: map['name'],
+      brand: map['brand'],
+      protein: map['protein'],
+      carbs: map['carbs'],
+      fat: map['fat'],
+      calories: map['calories'],
+      servingSize: map['servingSize'],
+      servingUnits: map['servingUnits'],
+    );
+  }
 }

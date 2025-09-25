@@ -66,10 +66,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
     for (var log in logs) {
       final food = foodMap[log.foodId]!;
-      protein += food.protein * log.servings / food.servingSize;
-      carbs += food.carbs * log.servings / food.servingSize;
-      fat += food.fat * log.servings / food.servingSize;
-      calories += food.calories * log.servings / food.servingSize;
+      protein += food.protein * log.servings;
+      carbs += food.carbs * log.servings;
+      fat += food.fat * log.servings;
+      calories += food.calories * log.servings;
     }
 
     setState(() {
@@ -300,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 "${food.name}: ${log.servings} ${food.servingUnits}",
                               ),
                               subtitle: Text(
-                                "Brand: ${food.brand}\nCalories: ${food.calories * log.servings / food.servingSize} kcal, Carbs: ${food.carbs * log.servings / food.servingSize}g, Protein: ${food.protein * log.servings / food.servingSize}g, Fat: ${food.fat * log.servings / food.servingSize}g",
+                                "Brand: ${food.brand}\nCalories: ${food.calories * log.servings} kcal, Carbs: ${food.carbs * log.servings}g, Protein: ${food.protein * log.servings}g, Fat: ${food.fat * log.servings}g",
                               ),
                               leading: IconButton(
                                 icon: Icon(Icons.delete, color: Colors.red),

@@ -59,10 +59,6 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
 
       await _dbService.insertFood(food);
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Food added: ${food.name}")));
-
       Navigator.pop(context);
     }
   }

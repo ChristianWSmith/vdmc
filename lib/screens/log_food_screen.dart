@@ -74,9 +74,6 @@ class _LogFoodScreenState extends State<LogFoodScreen> {
 
     if (!mounted) return; // <-- Prevents the crash if screen was closed
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text("Logged ${_selectedFood!.name}")));
     Navigator.pop(context);
   }
 
@@ -115,9 +112,6 @@ class _LogFoodScreenState extends State<LogFoodScreen> {
           _currentCalories = 0;
         }
       });
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Deleted ${food.name}")));
     }
   }
 

@@ -122,11 +122,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _deleteLog(LoggedFood log) async {
     await _db.deleteLoggedFood(log.id);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Deleted ${_foodsById[log.foodId]?.name ?? 'Food'}"),
-      ),
-    );
     setState(() {
       _todayLogs.remove(log);
       // Recalculate totals
@@ -297,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             final food = _foodsById[log.foodId]!;
                             return ListTile(
                               title: Text(
-                                "${food.name}: ${log.servings} ${food.servingUnits}",
+                                "${food.name}: ${log.servings * food.servingSize} ${food.servingUnits}",
                               ),
                               subtitle: Text(
                                 "Brand: ${food.brand}\nCalories: ${food.calories * log.servings} kcal, Carbs: ${food.carbs * log.servings}g, Protein: ${food.protein * log.servings}g, Fat: ${food.fat * log.servings}g",

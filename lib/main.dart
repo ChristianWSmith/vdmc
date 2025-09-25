@@ -153,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
             value: percent,
             minHeight: 8,
             backgroundColor: Colors.grey[300],
-            color: _getMacroColor(label),
+            color: current > goal ? Colors.red : _getMacroColor(label),
           ),
           SizedBox(height: 2),
           Text(
@@ -177,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
               value: percent,
               minHeight: 8,
               backgroundColor: Colors.grey[300],
-              color: _getMacroColor(label),
+              color: current > goal ? Colors.red : _getMacroColor(label),
             ),
           ],
         ),

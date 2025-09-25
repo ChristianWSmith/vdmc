@@ -10,11 +10,15 @@ import 'models/food.dart';
 import 'models/logged_food.dart';
 import 'services/database_service.dart';
 import 'screens/log_food_screen.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:io' show Platform;
 
 void main() {
   // Initialize FFI for desktop
-  sqfliteFfiInit();
-  databaseFactory = databaseFactoryFfi;
+  if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
 
   runApp(MacroCounterApp());
 }

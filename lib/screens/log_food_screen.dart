@@ -162,7 +162,7 @@ class _LogFoodScreenState extends State<LogFoodScreen> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
-                        "Brand: ${food.brand}\nServing: ${food.servingSize} ${food.servingUnits}\nProtein: ${food.protein}g, Carbs: ${food.carbs}g, Fat: ${food.fat}g, Calories: ${food.calories} kcal",
+                        "Brand: ${food.brand}\nServing: ${food.servingSize} ${food.servingUnits}\nCalories: ${food.calories} kcal, Carbs: ${food.carbs}g, Protein: ${food.protein}g, Fat: ${food.fat}g",
                       ),
                       onTap: () {
                         setState(() {

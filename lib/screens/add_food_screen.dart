@@ -96,14 +96,14 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
                 decoration: InputDecoration(labelText: "Brand (optional)"),
               ),
               TextFormField(
-                controller: _proteinController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: "Protein (g)"),
-              ),
-              TextFormField(
                 controller: _carbsController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(labelText: "Carbs (g)"),
+              ),
+              TextFormField(
+                controller: _proteinController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(labelText: "Protein (g)"),
               ),
               TextFormField(
                 controller: _fatController,

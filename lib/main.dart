@@ -256,18 +256,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Expanded(
                           child: _buildMacroProgress(
-                            "Protein",
-                            _totalProtein,
-                            goals!.protein,
+                            "Carbs",
+                            _totalCarbs,
+                            goals!.carbs,
                             horizontal: true,
                           ),
                         ),
                         SizedBox(width: 8),
                         Expanded(
                           child: _buildMacroProgress(
-                            "Carbs",
-                            _totalCarbs,
-                            goals!.carbs,
+                            "Protein",
+                            _totalProtein,
+                            goals!.protein,
                             horizontal: true,
                           ),
                         ),
@@ -296,7 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 "${food.name}: ${log.servings} ${food.servingUnits}",
                               ),
                               subtitle: Text(
-                                "Brand: ${food.brand}\nProtein: ${food.protein * log.servings / food.servingSize}g, Carbs: ${food.carbs * log.servings / food.servingSize}g, Fat: ${food.fat * log.servings / food.servingSize}g, Calories: ${food.calories * log.servings / food.servingSize} kcal",
+                                "Brand: ${food.brand}\nCalories: ${food.calories * log.servings / food.servingSize} kcal, Carbs: ${food.carbs * log.servings / food.servingSize}g, Protein: ${food.protein * log.servings / food.servingSize}g, Fat: ${food.fat * log.servings / food.servingSize}g",
                               ),
                               leading: IconButton(
                                 icon: Icon(Icons.delete, color: Colors.red),

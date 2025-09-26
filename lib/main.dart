@@ -27,7 +27,7 @@ class MacroCounterApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'VDMC',
+      title: 'Very Dumb Macro Counter',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: HomeScreen(),
     );
@@ -216,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("VDMC"),
+        title: Text("Very Dumb Macro Counter"),
         actions: [
           IconButton(
             icon: Icon(Icons.flag),

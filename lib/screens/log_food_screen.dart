@@ -156,12 +156,13 @@ class _LogFoodScreenState extends State<LogFoodScreen> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
-                        "Brand: ${food.brand}\nServing: ${food.servingSize} ${food.servingUnits}\nCalories: ${food.calories} kcal, Carbs: ${food.carbs}g, Protein: ${food.protein}g, Fat: ${food.fat}g",
+                        "Brand: ${food.brand}\nServing: ${food.servingSize} ${food.servingUnits}\nCalories: ${food.calories.toStringAsFixed(0)} kcal, Carbs: ${food.carbs.toStringAsFixed(0)} g, Protein: ${food.protein.toStringAsFixed(0)} g, Fat: ${food.fat.toStringAsFixed(0)} g",
                       ),
                       onTap: () {
                         setState(() {
                           _selectedFoodId = food.id;
-                          _amountController.text = food.servingSize.toString();
+                          _amountController.text = food.servingSize
+                              .toStringAsFixed(0);
                           _updateMacros();
                         });
                       },
@@ -191,9 +192,9 @@ class _LogFoodScreenState extends State<LogFoodScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Protein: ${_currentProtein.toStringAsFixed(1)} g, "
-                    "Carbs: ${_currentCarbs.toStringAsFixed(1)} g, "
-                    "Fat: ${_currentFat.toStringAsFixed(1)} g, "
+                    "Protein: ${_currentProtein.toStringAsFixed(0)} g, "
+                    "Carbs: ${_currentCarbs.toStringAsFixed(0)} g, "
+                    "Fat: ${_currentFat.toStringAsFixed(0)} g, "
                     "Calories: ${_currentCalories.toStringAsFixed(0)} kcal",
                   ),
                 ],

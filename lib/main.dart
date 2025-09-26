@@ -23,6 +23,16 @@ void main() {
   runApp(MacroCounterApp());
 }
 
+class MacroCounterAppLifecycleObserver with WidgetsBindingObserver {
+  final _db = DatabaseService();
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      await _db.purgeOldLogs();
+    }
+  }
+}
+
 class MacroCounterApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -167,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "$label: ${current.toStringAsFixed(1)} / ${goal.toStringAsFixed(1)} ${_getMacroUnit(label)}",
+              "$label: ${current.toStringAsFixed(0)} / ${goal.toStringAsFixed(0)} ${_getMacroUnit(label)}",
             ),
             SizedBox(height: 4),
             LinearProgressIndicator(
@@ -292,10 +302,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             final food = _foodsById[log.foodId]!;
                             return ListTile(
                               title: Text(
-                                "${food.name}: ${log.servings * food.servingSize} ${food.servingUnits}",
+                                "${food.name}: ${(log.servings * food.servingSize).toStringAsFixed(0)} ${food.servingUnits}",
                               ),
                               subtitle: Text(
-                                "Brand: ${food.brand}\nCalories: ${food.calories * log.servings} kcal, Carbs: ${food.carbs * log.servings}g, Protein: ${food.protein * log.servings}g, Fat: ${food.fat * log.servings}g",
+                                "Brand: ${food.brand}\nCalories: ${(food.calories * log.servings).toStringAsFixed(0)} kcal, Carbs: ${(food.carbs * log.servings).toStringAsFixed(0)} g, Protein: ${(food.protein * log.servings).toStringAsFixed(0)} g, Fat: ${(food.fat * log.servings).toStringAsFixed(0)} g",
                               ),
                               leading: IconButton(
                                 icon: Icon(Icons.delete, color: Colors.red),

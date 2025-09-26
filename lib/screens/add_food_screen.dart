@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vdmc/constants.dart';
+import 'package:vdmc/utils.dart';
 import '../models/food.dart';
 import '../services/database_service.dart';
 
@@ -39,7 +40,7 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
 
     setState(() {
       _calories = calc;
-      _caloriesController.text = _calories.toStringAsFixed(0);
+      _caloriesController.text = formatDouble(_calories);
     });
   }
 

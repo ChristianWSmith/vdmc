@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:vdmc/constants.dart';
+import 'package:vdmc/utils.dart';
 
 import 'models/macro_goals.dart';
 import 'services/preferences_service.dart';
@@ -164,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SizedBox(height: 2),
           Text(
-            "${current.toStringAsFixed(0)} / ${goal.toStringAsFixed(0)} ${_getMacroUnit(label)}",
+            "${formatDouble(current)} / ${formatDouble(goal)} ${_getMacroUnit(label)}",
             style: TextStyle(fontSize: 10),
           ),
         ],
@@ -177,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "$label: ${current.toStringAsFixed(0)} / ${goal.toStringAsFixed(0)} ${_getMacroUnit(label)}",
+              "$label: ${formatDouble(current)} / ${formatDouble(goal)} ${_getMacroUnit(label)}",
             ),
             SizedBox(height: 4),
             LinearProgressIndicator(
@@ -302,10 +303,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             final food = _foodsById[log.foodId]!;
                             return ListTile(
                               title: Text(
-                                "${food.name}: ${(log.servings * food.servingSize).toStringAsFixed(0)} ${food.servingUnits}",
+                                "${food.name}: ${formatDouble(log.servings * food.servingSize)} ${food.servingUnits}",
                               ),
                               subtitle: Text(
-                                "Brand: ${food.brand}\nCalories: ${(food.calories * log.servings).toStringAsFixed(0)} kcal, Carbs: ${(food.carbs * log.servings).toStringAsFixed(0)} g, Protein: ${(food.protein * log.servings).toStringAsFixed(0)} g, Fat: ${(food.fat * log.servings).toStringAsFixed(0)} g",
+                                "Brand: ${food.brand}\nCalories: ${formatDouble(food.calories * log.servings)} kcal, Carbs: ${formatDouble(food.carbs * log.servings)} g, Protein: ${formatDouble(food.protein * log.servings)} g, Fat: ${formatDouble(food.fat * log.servings)} g",
                               ),
                               leading: IconButton(
                                 icon: Icon(Icons.delete, color: Colors.red),

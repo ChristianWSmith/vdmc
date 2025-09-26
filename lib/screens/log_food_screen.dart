@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vdmc/utils.dart';
 import '../models/food.dart';
 import '../models/logged_food.dart';
 import '../services/database_service.dart';
@@ -156,13 +157,14 @@ class _LogFoodScreenState extends State<LogFoodScreen> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
-                        "Brand: ${food.brand}\nServing: ${food.servingSize} ${food.servingUnits}\nCalories: ${food.calories.toStringAsFixed(0)} kcal, Carbs: ${food.carbs.toStringAsFixed(0)} g, Protein: ${food.protein.toStringAsFixed(0)} g, Fat: ${food.fat.toStringAsFixed(0)} g",
+                        "Brand: ${food.brand}\nServing: ${formatDouble(food.servingSize)} ${food.servingUnits}\nCalories: ${formatDouble(food.calories)} kcal, Carbs: ${formatDouble(food.carbs)} g, Protein: ${formatDouble(food.protein)} g, Fat: ${formatDouble(food.fat)} g",
                       ),
                       onTap: () {
                         setState(() {
                           _selectedFoodId = food.id;
-                          _amountController.text = food.servingSize
-                              .toStringAsFixed(0);
+                          _amountController.text = formatDouble(
+                            food.servingSize,
+                          );
                           _updateMacros();
                         });
                       },
@@ -192,10 +194,10 @@ class _LogFoodScreenState extends State<LogFoodScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Protein: ${_currentProtein.toStringAsFixed(0)} g, "
-                    "Carbs: ${_currentCarbs.toStringAsFixed(0)} g, "
-                    "Fat: ${_currentFat.toStringAsFixed(0)} g, "
-                    "Calories: ${_currentCalories.toStringAsFixed(0)} kcal",
+                    "Protein: ${formatDouble(_currentProtein)} g, "
+                    "Carbs: ${formatDouble(_currentCarbs)} g, "
+                    "Fat: ${formatDouble(_currentFat)} g, "
+                    "Calories: ${formatDouble(_currentCalories)} kcal",
                   ),
                 ],
               ),

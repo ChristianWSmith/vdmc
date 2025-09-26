@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vdmc/constants.dart';
+import 'package:vdmc/utils.dart';
 import '../models/macro_goals.dart';
 import '../services/preferences_service.dart';
 
@@ -73,7 +74,7 @@ class _SetGoalsScreenState extends State<SetGoalsScreen> {
         child: Column(
           children: [
             Text(
-              "Calories: ${_calories.toStringAsFixed(0)}",
+              "Calories: ${formatDouble(_calories)}",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             TextField(

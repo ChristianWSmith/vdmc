@@ -68,23 +68,6 @@ class DatabaseService {
     }
   }
 
-  Future<void> purgeOldLogs() async {
-    final db = await database;
-    try {
-      final today = DateTime.now();
-      final startOfToday = DateTime(today.year, today.month, today.day);
-
-      await db.delete(
-        'logs',
-        where: 'date < ?',
-        whereArgs: [startOfToday.toIso8601String()],
-      );
-    } catch (e) {
-      // Table might not exist yet (fresh DB) — ignore
-      debugPrint("Purge skipped: $e");
-    }
-  }
-
   // === Foods ===
   Future<void> insertFood(Food food) async {
     final db = await database;

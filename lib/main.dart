@@ -24,16 +24,6 @@ void main() {
   runApp(MacroCounterApp());
 }
 
-class MacroCounterAppLifecycleObserver with WidgetsBindingObserver {
-  final _db = DatabaseService();
-  @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.resumed) {
-      await _db.purgeOldLogs();
-    }
-  }
-}
-
 class MacroCounterApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
